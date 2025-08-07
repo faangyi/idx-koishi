@@ -74,6 +74,7 @@ nohup /home/user/$username/cloudflared/cloudflared tunnel --no-autoupdate --edge
 # 安装koishi
 cd /home/user/$username
 npm init -y koishi@latest koishi-app -- --yes
+echo "正在安装koishi，请耐心等待"
 cd koishi-app
 npm install
 
