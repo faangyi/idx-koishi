@@ -1,5 +1,23 @@
 #!/bin/bash
 
+# 获取用户名
+username=$(uname -n | cut -d'-' -f2)
+
+# 检查是否配置noto-fonts
+if ! grep -qE '\bpkgs\.noto-fonts\b' "/home/user/$username/.idx/dev.nix"; then
+    echo "检测dev.nix中尚未配置noto-fonts，使用puppeteer时将无法渲染文字"
+    echo "请在默认打开的dev.nix文件中（或在左侧文件浏览器.idx文件夹中）添加pkgs.noto-fonts"
+    echo "然后点击右下Rebuild Environment按钮重建工作区后再次运行脚本"
+    echo "如果找不到按钮也可退回idx首页，点击工作区右方三个点选择Restart即可重建"
+    echo "如无渲染文字需求，输入任意内容回车继续执行脚本"
+    echo "直接回车退出脚本进行配置"
+    read -r user_input
+
+    if [[ -z "$user_input" ]]; then
+        exit 1
+    fi
+fi
+
 # 清除可能存在的旧进程
 pkill -x "npm start" 2>/dev/null
 pkill -x "cloudflared" 2>/dev/null
@@ -29,9 +47,6 @@ if [ -z "$auth" ]; then
         fi
     done
 fi
-
-# 获取用户名
-username=$(uname -n | cut -d'-' -f2)
 
 # 创建必要的目录
 mkdir -p /home/user/$username/cloudflared
